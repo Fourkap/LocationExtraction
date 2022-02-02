@@ -1,5 +1,7 @@
 # pip install -U spacy
 # python -m spacy download en_core_web_sm
+import re
+
 import spacy
 
 # Bibliothèque utiliser pour avoir une liste de ville et de pays
@@ -7,7 +9,7 @@ import geonamescache
 from spacy import displacy
 from flask import Flask, jsonify, request
 
-nlp = spacy.load("fr_core_news_lg")
+nlp = spacy.load("en_core_web_lg")
 
 gc = geonamescache.GeonamesCache()
 
@@ -42,20 +44,33 @@ def extractloc(text):
 
     entite = dict()
     # Find named entities, phrases and concepts
+    tableau = [chunk.text for chunk in doc.noun_chunks]
+    print(tableau)
+    flagChapter = 0
+    for item in tableau:
+        if re.search("chapter", item, re.IGNORECASE):
+            flagChapter = 1
+            break
+
+    entite["pays"] = []
+    entite["ville"] = []
+    entite["autre_localisation"] = []
+
+
     for entity in doc.ents:
         # print(entity.text, entity.label_)
         # entite.append(entity.text)
-        if entity.label_ == 'LOC':
+        # if entity.text == "Chapter": print("toto")
+
+        if entity.label_ == 'GPE':
             if entity.text in countries:
-                entite["pays"] = entity.text
+                entite["pays"].append(entity.text)
             elif entity.text in cities:
-                entite["ville"] = entity.text
-            else:
-                entite["autre localisation"] = entity.text
-
-    return entite
-
-    # displacy.serve(doc, style="ent")
+                entite["ville"].append(entity.text)
+                print(entity.text)
+        if entity.label_ == 'LOC':
+            entite["autre_localisation"].append(entity.text)
+    return entite["pays"], entite["ville"], entite["autre_localisation"], flagChapter
 
 
 def gen_dict_extract(var, key):
