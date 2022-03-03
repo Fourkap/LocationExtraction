@@ -25,13 +25,17 @@ def extractloc(text):
 
     # text = (
     # "Bonjour je m'appelle Alexandre Kaprielian, et j'habite en FRANCE du coté des Alpes.")
+    flagChapter = 0
     doc = nlp(text)
-
+    for mot in doc:
+        if str(mot) == 'CHAPTER':
+            #print("trouver")
+            flagChapter = 1
     # Process whole documents
 
     # Analyze syntax
-    print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-    print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+    #print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+    #print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
 
     # gets nested dictionary for countries
     countries = gc.get_countries()
@@ -45,17 +49,18 @@ def extractloc(text):
     entite = dict()
     # Find named entities, phrases and concepts
     tableau = [chunk.text for chunk in doc.noun_chunks]
-    print(tableau)
-    flagChapter = 0
-    for item in tableau:
-        if re.search("chapter", item, re.IGNORECASE):
-            flagChapter = 1
-            break
+    #print(tableau)
+
+    # for item in tableau:
+    #     #print(item)
+    #     if item == "CHAPTER":
+    #         print("trouver")
+    #         flagChapter = 1
+
 
     entite["pays"] = []
     entite["ville"] = []
     entite["autre_localisation"] = []
-
 
     for entity in doc.ents:
         # print(entity.text, entity.label_)
@@ -67,7 +72,7 @@ def extractloc(text):
                 entite["pays"].append(entity.text)
             elif entity.text in cities:
                 entite["ville"].append(entity.text)
-                print(entity.text)
+                #print(entity.text)
         if entity.label_ == 'LOC':
             entite["autre_localisation"].append(entity.text)
     return entite["pays"], entite["ville"], entite["autre_localisation"], flagChapter
