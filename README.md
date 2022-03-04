@@ -14,6 +14,6 @@ https://github.com/Fourkap/LocationExtraction
 ```
 Etape 2: Installation des dépendances
 
-Lancer le fichier main.py
+Etape 3: Lancer le fichier main.py
 
 Etape 4: Ouvrir http://yourhost:5000/ dans votre navigateur.
