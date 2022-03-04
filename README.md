@@ -4,7 +4,7 @@ LocationExtraction est une application développée en python qui extrait grâce
 
 Elle affiche ensuite ces informations sur une carte du monde open sources grâce à la bibliothèque GeoPy qui extrait les latitudes et longitudes à partir d'une chaine de caractère, tout cela en correspondance avec des listes de villes et de pays existants.
 
-Les marqueurs affichés sur la carte viennent ensuite donner à l'utilisateur la possibilité d'ouvrir directement le livre au bon chapitre et a la bonne page correspondante à cette localisation.
+Les marqueurs affichés sur la carte viennent ensuite donner à l'utilisateur la possibilité d'ouvrir directement le livre au bon chapitre et à la bonne page correspondante à cette localisation.
 
 
 ![LocationExtraction](Location.png)
