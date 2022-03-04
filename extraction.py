@@ -6,18 +6,10 @@ import spacy
 
 # Bibliothèque utiliser pour avoir une liste de ville et de pays
 import geonamescache
-from spacy import displacy
-from flask import Flask, jsonify, request
 
 nlp = spacy.load("en_core_web_lg")
 
 gc = geonamescache.GeonamesCache()
-
-# gets nested dictionary for countries
-countries = gc.get_countries()
-
-# gets nested dictionary for cities
-cities = gc.get_cities()
 
 
 def extractloc(text):
@@ -29,18 +21,17 @@ def extractloc(text):
     doc = nlp(text)
     for mot in doc:
         if str(mot) == 'CHAPTER':
-            #print("trouver")
+            # print("trouver")
             flagChapter = 1
-    # Process whole documents
 
-    # Analyze syntax
-    #print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
-    #print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
+    # Analyze de la syntaxe
+    # print("Noun phrases:", [chunk.text for chunk in doc.noun_chunks])
+    # print("Verbs:", [token.lemma_ for token in doc if token.pos_ == "VERB"])
 
-    # gets nested dictionary for countries
+    # Dictionnaire de pays
     countries = gc.get_countries()
 
-    # gets nested dictionary for cities
+    # Dictionnaire des villes
     cities = gc.get_cities()
 
     cities = [*gen_dict_extract(cities, 'name')]
@@ -49,14 +40,13 @@ def extractloc(text):
     entite = dict()
     # Find named entities, phrases and concepts
     tableau = [chunk.text for chunk in doc.noun_chunks]
-    #print(tableau)
+    # print(tableau)
 
     # for item in tableau:
     #     #print(item)
     #     if item == "CHAPTER":
     #         print("trouver")
     #         flagChapter = 1
-
 
     entite["pays"] = []
     entite["ville"] = []
@@ -66,13 +56,13 @@ def extractloc(text):
         # print(entity.text, entity.label_)
         # entite.append(entity.text)
         # if entity.text == "Chapter": print("toto")
-
+        #Recupération des entités nommées de type Localisation.
         if entity.label_ == 'GPE':
             if entity.text in countries:
                 entite["pays"].append(entity.text)
             elif entity.text in cities:
                 entite["ville"].append(entity.text)
-                #print(entity.text)
+                # print(entity.text)
         if entity.label_ == 'LOC':
             entite["autre_localisation"].append(entity.text)
     return entite["pays"], entite["ville"], entite["autre_localisation"], flagChapter

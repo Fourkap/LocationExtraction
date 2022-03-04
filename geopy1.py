@@ -13,6 +13,9 @@ def GetGeo(loc):
     location = geolocator.geocode(loc)
 
     # printing address and coordinates
-    print(location.address)
-    print((location.latitude, location.longitude))
-    return location
+
+    if location is not None:
+        print(location.address)
+        print((location.latitude, location.longitude))
+        return location
+
